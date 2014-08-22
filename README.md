@@ -26,12 +26,8 @@ Call this function below:
 
 `json-formatter.vim` also has added an `nnoremap` for you:
 
-```VIML
-nnoremap <leader>jf ...
-```
-
-So if your `<leader>` is `-`, you can use keys `-json` in normal mode to format
-your json file.
+1. Press `Ctrl + j`
+2. `f` followed
 
 ## Configuration
 

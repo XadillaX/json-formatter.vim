@@ -2,5 +2,5 @@ function! JsonFormatter()
     execute "%!jjson --vim-plugin-mode -i 4 -f %"
 endfunction
 
-nnoremap <leader>jf :call JsonFormatter()<cr>
+nnoremap <C-j>f :call JsonFormatter()<cr>
 
