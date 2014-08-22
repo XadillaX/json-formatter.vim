@@ -26,8 +26,11 @@ Call this function below:
 
 `json-formatter.vim` also has added an `nnoremap` for you:
 
-1. Press `Ctrl + j`
-2. `f` followed
+```VIML
+<leader>json
+```
+
+So you only type `<leader>` and then type `json`, this plugin will work for you.
 
 ## Configuration
 
