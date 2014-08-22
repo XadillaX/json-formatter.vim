@@ -27,7 +27,7 @@ Call this function below:
 `json-formatter.vim` also has added an `nnoremap` for you:
 
 ```VIML
-nnoremap <leader>json ...
+nnoremap <leader>jf ...
 ```
 
 So if your `<leader>` is `-`, you can use keys `-json` in normal mode to format
