@@ -1,0 +1,181 @@
+json-formatter.txt*      For Vim version 7.0. 
+
+Author:	        Kaidi Zhu                             October 10, 2015
+Version:        2.0.0
+
+For instructions on installing this file, type
+	:help add-local-help |add-local-help| inside Vim.
+    
+Homepage: http://vim.sourceforge.net/script.php?script_id=5010
+
+
+==============================================================================
+1. Contents                                      *json_formatter* *json_formatter-contents*
+
+    1. Contents...............................: |json_formatter-contents|
+    2. Description............................: |json_formatter-description|
+    3. Installation...........................: |json_formatter-installation|
+    4. Configuration..........................: |json_formatter-configure|
+       3.1 Global Variables...................: |json_formatter-globals|
+       3.2 Default Keys.......................: |json_formatter-mappings|
+    4. Commands...............................: |json_formatter-commands|
+       JSONFormatter..........................: |:JSONFormatter|
+
+==============================================================================
+2. Description                                   *json_formatter-description*
+
+A Vim plugin for formatting JSON.
+
+JSONLint is used to first check the validity of the JSON.
+If JSONLint reports error a Vim buffer is open (similar to the |quickfix|
+window) which will display the error and the line information. 
+Clicking on that line will take you to the error in the buffer
+which contains the JSON.  
+
+If there are no errors, the selected text is replaced with the formatted
+text.
+
+The json-formatter Vim plugin calls the NodeJS jjson module to perform
+the formatting.  
+
+==============================================================================
+3. Installation                                 *json_formatter-installation*
+
+If using Vundle:
+    Add this `repo` to your Vundle configuration: 
+        Bundle "XadillaX/json-formatter.vim" 
+
+No package manager:
+    If you are not using a Vim package manager, simply unzip the 
+    jjson-formatter.zip file into your .vim or vimfiles directory.  
+    There are 2 files:
+        plugin/json-formatter.vim
+        doc/json-formatter.txt
+
+Node.js
+    A Node.js module is required which performs the actual formatting
+    and syntax checking.  You must first install Node.js from here:
+        https://nodejs.org/
+
+    Once installed, you must install the jjson package.  Using a 
+    terminal or command prompt, you can run the following:
+        $ npm install jjson -g 
+
+    To verify the package is installed correctly, from the terminal
+    or command prompt you can run:
+        jjson -h
+
+    You should get output similar to this: >
+        Usage: jjson [options]
+
+        Options:
+           -f, --file              JSON filename.
+           -e, --encoding          JSON file encoding.  [utf8]
+           -i, --indent            Number of indent for each line.  [2]
+           -v, --vim-plugin-mode   Whether it's in VIM plugin mode.
+
+==============================================================================
+3. Configuration                                 *json_formatter-configure*
+
+3.1 Global Variables                             *json_formatter-globals*
+
+You can customize the json_formatter by setting various global variables in
+your |.vimrc|. 
+
+Running the Node.js package to format the JSON can be modified using 
+some additional options (if necessary):  >
+
+    json_formatter_command
+<       Default: jjson
+        You can include a full path to the script if necessary using: >
+            let g:json_formatter_command = 'C:\Program Files\nodejs\node_modules\.bin\jjson.cmd'
+    json_formatter_command_encoding
+<       Default: 
+        This will pass an encoding value using the -e parameter.  >
+            let g:json_formatter_command_encoding = 'utf8'
+    json_formatter_command_indent
+<       Default:
+        This will pass an indent value using the -i parameter.  >
+            let g:json_formatter_command_indent = '4'
+
+The jjson-formatter error window is displayed if there is 
+a problem with the JSON.  The following settings allow you to decide
+where this window is opened and it's size.
+>
+    json_formatter_window_use_horiz
+<       Default: 1
+        When the json_formatter window is opened, it uses a horizontal split at the
+        bottom of the Vim window.  It can optionally use a vertical split by
+        setting this option to 0.  >
+            let g:json_formatter_window_use_horiz = 0  " Use vertical split
+    json_formatter_window_height
+<       Default: 8
+        If using a horizontal split, this option controls how high to make
+        the window.  >
+            let g:json_formatter_window_height = 8
+    json_formatter_window_width
+<       Default: 30
+        If using a vertical split, this option controls how wide to make the
+        window.  >
+            let g:json_formatter_window_width = 30
+    json_formatter_window_use_bottom
+<       Default: 1
+        If using a horizontal split, this option control whether the window is
+        opened at the top or bottom of the Vim window.  Setting this option to
+        0 forces the window to open at the top of the Vim window.  >
+            let g:json_formatter_window_use_bottom = 1
+    json_formatter_window_use_right
+<       Default: 1
+        If using a vertical split, this option control whether the window is
+        opened on the left or right side of the Vim window.  To force the
+        window to open on the left side, set this option to 0.  >
+            let g:json_formatter_window_use_right = 1
+    json_formatter_window_increment
+<       Default: 1
+        If using a vertical split the default width of the vertical window may
+        be too narrow to view enough of the elements.  Pressing [<space>] will
+        increase the size of the window by this number of columns.  Pressing
+        [<space>] again will toggle it back to the original size.  >
+            let g:json_formatter_window_increment = 50
+
+<
+3.2 Buffer Variables                             *json_formatter-buffer*
+
+You can customize the json_formatter by setting various buffer local variables in
+your buffer to allow you to format the JSON differently for each buffer.
+For example, if you are working on different projects and one specifies
+and indent standard of 4 and the other 2, then you can define a buffer
+local variable to override the jjson command to pass the correct values
+to Node.js.  The let statements below differ from the globals with a 
+"b:" at the start, rather than a "g:". >
+
+    json_formatter_command
+<       Default: jjson
+        You can include a full path to the script if necessary using: >
+            let b:json_formatter_command = 'C:\Program Files\nodejs\node_modules\.bin\jjson.cmd'
+    json_formatter_command_encoding
+<       Default: 
+        This will pass an encoding value using the -e parameter.  >
+            let b:json_formatter_command_encoding = 'latin1'
+    json_formatter_command_indent
+<       Default:
+        This will pass an indent value using the -i parameter.  >
+            let b:json_formatter_command_indent = '8'
+
+==============================================================================
+4. Commands:                                     *json_formatter-commands*
+
+JSONFormatter                                    *:JSONFormatter*
+     The JSONFormatter command will either format the JSON supplied
+     or open the |quickfix| window and show any errors reported
+     by the tools.  Clicking or hitting <Enter> on any of the lines
+     reported in the quickfix window will take you directly to 
+     that location.
+
+         Examples: >
+            :JSONFormatter
+            :1,100JSONFormatter
+            :'<,'>JSONFormatter
+<            
+
+vim: ts=4 ft=help tw=78

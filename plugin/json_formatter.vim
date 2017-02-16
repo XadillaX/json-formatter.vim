@@ -1,8 +1,18 @@
+" json-formatter: A VIM plugin for formatting JSON 
+"   Author:	  David Fishburn <dfishburn dot vim at gmail dot com>
+"   Last Changed: 2017 Feb 15
+"   Version:	  2.0.0
+"   Script:	  http://www.vim.org/script.php?script_id=5010
+"   License:      GPL (http://www.gnu.org/licenses/gpl.html)
+"
+"   Documentation:
+"        :h json-formatter.txt 
+"
 if exists("g:loaded_json_formatter")
     finish
 endif
 
-let g:loaded_json_formatter = 1
+let g:loaded_json_formatter = 2
 
 let s:json_formatter_buffer_errors     = 0
 let s:json_formatter_buffer_last       = 0
@@ -15,6 +25,14 @@ let s:json_formatter_tempfile = s:json_formatter_tempfile.(s:json_formatter_temp
 " define shell command
 if !exists('g:json_formatter_command')
     let g:json_formatter_command = 'jjson'
+endif
+
+" Parameters to the shell command
+if !exists('g:json_formatter_command_encoding')
+    let g:json_formatter_command_encoding  = ''
+endif
+if !exists('g:json_formatter_command_indent')
+    let g:json_formatter_command_indent  = ''
 endif
 
 " Error window position and size
@@ -87,18 +105,41 @@ function! s:JSONFormatter(...) range
     let s:json_formatter_buffer_last       = bufnr('%')
     let s:json_formatter_buffer_last_winnr = winnr()
 
+    let encoding = g:json_formatter_command_encoding
+    if exists("b:json_formatter_command_encoding")
+        let encoding = b:json_formatter_command_encoding
+    endif
+
+    let indent = g:json_formatter_command_indent
+    if exists("b:json_formatter_command_indent")
+        let indent = b:json_formatter_command_indent
+    endif
+
+    let json_cmd = g:json_formatter_command
+    if exists("b:json_formatter_command")
+        let json_cmd = b:json_formatter_command
+    endif
+
     " Use nodejs to format the JSON
-    let cmd = shellescape(g:json_formatter_command)." -i 4 -f " . s:json_formatter_tempfile
+    let cmd = shellescape(json_cmd)
+    if encoding != ''
+        let cmd = cmd . " -e " . encoding 
+    endif
+    if indent != ''
+        let cmd = cmd . " -i " . indent 
+    endif
+    let cmd = cmd . " -f " . s:json_formatter_tempfile
+
     let result = system( cmd )
 
-    echomsg result
+    " echomsg result
     " If the formatting failed, the result always starts with "Error occurred"
     " so check for this text.
-    if result =~ '^Error occurred while parsing file'
+    if result =~ '^Error occurred while'
         " Handle strings like this:
-        "     Error occurred while parsing file:
+        "     Error occurred while:
         "     D:\WINDOW~1\json_formatter.json,3,130,found: '}' - expected: 'STRING'
-        let matches = matchlist(result, '^Error occurred while parsing file:\s\+\zs\([^,]\+\),\(\d\+\),\(\d\+\),\(.*\)', '', '')
+        let matches = matchlist(result, '^Error occurred while.\{-}file:\s\+\zs\([^,]\+\),\(\d\+\),\(\d\+\),\(.*\)', '', '')
 
         let MATCH_ALL      = 0
         let MATCH_FILENAME = 1
@@ -172,7 +213,7 @@ function! s:JSONFormatter(...) range
                         \, 'col': colnum
                         \, 'vcol': 0
                         \, 'nr': -1
-                        \, 'text': matchstr(result, '^Error occurred while parsing file: \zs.*', '', '')
+                        \, 'text': matchstr(result, '^Error occurred while.\{-}file: \zs.*', '', '')
                         \, 'type': 'E'
                         \}
                         \,]
