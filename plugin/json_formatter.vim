@@ -1,12 +1,12 @@
-" json-formatter: A VIM plugin for formatting JSON 
-"   Author:	  David Fishburn <dfishburn dot vim at gmail dot com>
+" json-formatter: A VIM plugin for formatting JSON
+"   Author:	Khaidi Chu <i at 2333 dot moe>, David Fishburn <dfishburn dot vim at gmail dot com>
 "   Last Changed: 2017 Feb 15
-"   Version:	  2.0.0
-"   Script:	  http://www.vim.org/script.php?script_id=5010
-"   License:      GPL (http://www.gnu.org/licenses/gpl.html)
+"   Version: 2.0.0
+"   Script: http://www.vim.org/script.php?script_id=5010
+"   License: MIT
 "
 "   Documentation:
-"        :h json-formatter.txt 
+"        :h json-formatter.txt
 "
 if exists("g:loaded_json_formatter")
     finish

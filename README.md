@@ -1,46 +1,47 @@
-# JSON Formatter Plugin for VIM
+# JSON Formatter Plugin for Vim
 
-A VIM plugin for formatting saved JSON file.
+A Vim plugin for formatting saved JSON file.
 
 ## Installation
 
-Add this `repo` to your Vundle configuration:
+### Vundle
 
-```VIML
-Bundle "XadillaX/json-formatter.vim"
+Add this repository to your Vundle configuration:
+
+```viml
+Plugin "XadillaX/json-formatter.vim"
 ```
 
-Make sure you have `node.js` installed and then install module below:
+Make sure you have [Node.js](https://nodejs.org/) installed and then install module below:
 
 ```shell
-$ npm install jjson -g
+$ npm install -g jjson
+```
+
+### Vim-Plug
+
+Add this repository to your Vim-Plugn configuration:
+
+```viml
+Plug "XadillaX/json-formatter.vim", { "do": "npm install -g jjson" }
+```
+
+### Dein
+
+Add this repository to your Dein configuration:
+
+```viml
+call dein#add("XadillaX/json-formatter.vim", { "build": "npm install -g jjson" })
 ```
 
 ## Usage
 
-Call this function below:
-
-```VIML
-:call JsonFormatter()
-```
-
-`json-formatter.vim` also has added an `nnoremap` for you:
-
-```VIML
-<leader>json
-```
-
-So you only type `<leader>` and then type `json`, this plugin will work for you.
+The `JSONFormatter` command will either format the JSON supplied or open the quickfix window and show any errors reported by the tools. Clicking or hitting `<Enter>` on any of the lines reported in the quickfix window will take you directly to that location.
 
 ## Configuration
 
-You can also DIY yor own keymap, just configure it as blow:
-
-```VIML
-nnoremap <YOUR KEYs> :call JsonFormatter()<cr>
-```
+See https://github.com/XadillaX/json-formatter.vim/blob/c671c41/doc/json_formatter.txt#L78-L163
 
 ## Contribution
 
-You're welcome to fork and push requests!
-
+Issues and PRs are welcomed!
